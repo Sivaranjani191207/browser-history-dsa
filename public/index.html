@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chronicle — Browser History Visualizer</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕸️</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◐</span>
+      <span class="brand-name">Chronicle</span>
+      <span class="brand-tag">browser history, visualized</span>
+    </div>
+    <button id="newTabBtn" class="ghost-btn">+ New session</button>
+  </header>
+
+  <main class="layout">
+
+    <!-- Mock browser chrome -->
+    <section class="chrome" aria-label="Simulated browser">
+      <div class="chrome-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+
+      <div class="nav-controls">
+        <button id="backBtn" class="nav-btn" title="Back" disabled>
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <button id="fwdBtn" class="nav-btn" title="Forward" disabled>
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+        <select id="stepSelect" class="step-select" title="Steps per click">
+          <option value="1">1 step</option>
+          <option value="2">2 steps</option>
+          <option value="3">3 steps</option>
+        </select>
+      </div>
+
+      <form id="visitForm" class="address-bar">
+        <span class="lock">🔒</span>
+        <input id="urlInput" type="text" placeholder="Type a URL and press Enter — e.g. github.com/you/dsa-miniproject" autocomplete="off" />
+        <button type="submit" class="go-btn">Visit</button>
+      </form>
+    </section>
+
+    <p id="statusLine" class="status-line">Connecting to server…</p>
+
+    <!-- Linked list visualization -->
+    <section class="viz-panel" aria-label="Doubly linked list visualization">
+      <div class="viz-heading">
+        <h2>The history chain</h2>
+        <span class="viz-sub">each visit is a node · <code>prev</code> / <code>next</code> pointers link them</span>
+      </div>
+      <div id="chain" class="chain"></div>
+    </section>
+
+    <div class="lower-grid">
+      <!-- Operation log -->
+      <section class="log-panel" aria-label="Operation log">
+        <h2>Operation log</h2>
+        <p class="panel-sub">what the data structure just did, and its cost</p>
+        <ul id="opLog" class="op-log"></ul>
+      </section>
+
+      <!-- How it works / complexity -->
+      <section class="notes-panel" aria-label="How it works">
+        <h2>How it works</h2>
+        <p class="panel-sub">the DSA behind the demo</p>
+        <dl class="notes">
+          <div>
+            <dt>visit(url)</dt>
+            <dd>Inserts a new node right after <code>current</code>, then drops everything ahead of it — just like a real browser erases forward history once you navigate somewhere new. <span class="cost">O(1)</span></dd>
+          </div>
+          <div>
+            <dt>back(steps)</dt>
+            <dd>Walks <code>current</code> toward <code>head</code> along <code>prev</code> pointers, stopping at the oldest page. <span class="cost">O(steps)</span></dd>
+          </div>
+          <div>
+            <dt>forward(steps)</dt>
+            <dd>Walks <code>current</code> toward the newest page along <code>next</code> pointers. <span class="cost">O(steps)</span></dd>
+          </div>
+          <div>
+            <dt>space</dt>
+            <dd>One node per visited page for the lifetime of the tab. <span class="cost">O(n)</span></dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="foot">
+    Doubly linked list · Express REST API · session <span id="sessionTag">—</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
